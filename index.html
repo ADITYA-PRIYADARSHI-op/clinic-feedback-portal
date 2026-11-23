@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clinic Feedback and Service Quality Portal</title>
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #eef5f4;
+  color: #222;
+}
+
+h1, h2, h3 { color: #0b4f49; margin-top: 0; }
+.grey { color: #666; }
+.center { text-align: center; }
+
+.menu {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #0f766e;
+  padding: 10px 20px;
+}
+.brand { color: white; font-size: 22px; font-weight: bold; }
+.menu button {
+  background-color: transparent;
+  color: white;
+  border: none;
+  font-size: 16px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.menu button:hover { background-color: #14b8a6; }
+
+.page { display: none; padding: 20px 0; }
+
+.hero {
+  width: 90%;
+  margin: 10px auto;
+  padding: 30px 20px;
+  text-align: center;
+  background-color: #0f766e;
+  border-radius: 12px;
+}
+.hero h1 { color: white; }
+.hero p { color: #d7f3ef; font-size: 18px; }
+
+.btn {
+  background-color: #f59e0b;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 22px;
+  margin: 10px 8px 0 0;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.btn:hover { background-color: #d97706; }
+
+.btn2 {
+  background-color: white;
+  color: #0f766e;
+  border: 2px solid #0f766e;
+  border-radius: 6px;
+  padding: 10px 18px;
+  margin: 10px 8px 0 0;
+  font-size: 15px;
+  cursor: pointer;
+}
+.btn2:hover { background-color: #d7f3ef; }
+
+.box {
+  width: 90%;
+  margin: 15px auto;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+.loginbox { width: 320px; }
+
+.tiles { display: flex; flex-wrap: wrap; justify-content: center; }
+.tile {
+  width: 190px;
+  margin: 8px;
+  padding: 15px;
+  text-align: center;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+.tile h2 { font-size: 32px; margin: 0; color: #0f766e; }
+.tile p { margin: 5px 0 0 0; color: #666; }
+
+.cards { display: flex; flex-wrap: wrap; justify-content: center; }
+.card {
+  width: 290px;
+  margin: 10px;
+  padding: 15px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+.stars { color: #f59e0b; font-size: 20px; }
+.reply {
+  background-color: #e6f6f3;
+  border-left: 4px solid #0f766e;
+  padding: 8px;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+label { display: block; font-weight: bold; margin: 14px 0 5px 0; }
+input[type=text], input[type=email], input[type=password], input[type=date], select, textarea {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #b6cfcb;
+  border-radius: 6px;
+  font-size: 16px;
+}
+input:hover, select:hover, textarea:hover { border-color: #14b8a6; }
+
+.thanks {
+  display: none;
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #e6f6f3;
+  border: 2px solid #0f766e;
+  border-radius: 8px;
+}
+
+#dashBox, #loginBox { display: none; }
+.topline { width: 90%; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+.tabs { width: 90%; margin: 10px auto; }
+.tabs button {
+  background-color: white;
+  color: #0f766e;
+  border: 2px solid #0f766e;
+  border-radius: 6px;
+  padding: 10px 16px;
+  margin: 4px 6px 4px 0;
+  cursor: pointer;
+}
+.tabs button:hover { background-color: #d7f3ef; }
+.tabs button.active { background-color: #0f766e; color: white; }
+.tabbox { display: none; }
+
+.barline { margin: 10px 0; }
+.bartrack { background-color: #e1ece9; height: 16px; border-radius: 6px; }
+.bar { height: 16px; background-color: #14b8a6; border-radius: 6px; }
+.bar.low { background-color: #ea580c; }
+.bar.mid { background-color: #f59e0b; }
+
+.problem { background-color: #fff1e8; border-left: 5px solid #ea580c; padding: 10px; margin: 10px 0; }
+.good { background-color: #e6f6f3; border-left: 5px solid #0f766e; padding: 10px; }
+
+.filters { display: flex; flex-wrap: wrap; }
+.filters div { width: 200px; margin-right: 15px; }
+
+.tablewrap { width: 90%; margin: 15px auto; overflow: auto; background-color: white; }
+table { border-collapse: collapse; width: 100%; min-width: 900px; font-size: 14px; }
+th { background-color: #0b4f49; color: white; text-align: left; padding: 10px; }
+td { padding: 10px; border-bottom: 1px solid #d5e3e0; vertical-align: top; }
+tr:hover { background-color: #d7f3ef; }
+
+.label { padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; }
+.Pending { background-color: #fde68a; }
+.Approved { background-color: #bbf7d0; }
+.Rejected { background-color: #fecaca; }
+
+.small { display: block; width: 85px; margin: 3px 0; padding: 5px; border: none; border-radius: 4px; color: white; cursor: pointer; }
+.green { background-color: #16a34a; }
+.orange { background-color: #d97706; }
+.teal { background-color: #0f766e; }
+.red { background-color: #dc2626; }
+
+.report { background-color: #1e293b; color: white; padding: 15px; border-radius: 8px; white-space: pre-wrap; }
+.footer { text-align: center; padding: 20px; background-color: #dcebe8; color: #666; }
+</style>
+</head>
+
+<body>
+
+<div class="menu">
+  <span class="brand">+ CareFeedback</span>
+  <div>
+    <button type="button" onclick="showPage('home')">Home</button>
+    <button type="button" onclick="showPage('feedback')">Give Feedback</button>
+    <button type="button" onclick="showPage('admin')">Staff Login</button>
+  </div>
+</div>
+
+<!-- Home -->
+<div id="page-home" class="page">
+  <div class="hero">
+    <h1>Your voice makes our clinic better</h1>
+    <p>Tell us about your visit in two minutes. The problems that keep coming back get fixed first.</p>
+    <button type="button" class="btn" onclick="showPage('feedback')">Share your feedback</button>
+  </div>
+
+  <div class="tiles">
+    <div class="tile"><h2 id="pubTotal">0</h2><p>Feedback received</p></div>
+    <div class="tile"><h2 id="pubAvg">0.0</h2><p>Average rating (out of 5)</p></div>
+    <div class="tile"><h2 id="pubReplied">0</h2><p>Replies from our team</p></div>
+  </div>
+
+  <h2 class="center">What patients are saying</h2>
+  <p class="center grey">Only comments approved by our moderators are shown here.</p>
+  <div id="publicWall" class="cards"></div>
+</div>
+
+<!-- Feedback form -->
+<div id="page-feedback" class="page">
+  <div class="box">
+    <h2>Share your feedback</h2>
+    <p class="grey">Fields marked * are required. You can stay anonymous.</p>
+
+    <label for="fType">Who is sending this? *</label>
+    <select id="fType" onchange="toggleIdentity()">
+      <option value="Anonymous">Anonymous (hide my name)</option>
+      <option value="Identified">Identified (share my name)</option>
+    </select>
+
+    <div id="identityBox">
+      <label for="fName">Your name *</label>
+      <input type="text" id="fName" placeholder="Enter your full name">
+      <label for="fEmail">Email (optional)</label>
+      <input type="email" id="fEmail" placeholder="Enter your email">
+    </div>
+
+    <label for="fService">Service you used *</label>
+    <select id="fService"></select>
+
+    <label for="fVisit">Date of visit *</label>
+    <input type="date" id="fVisit">
+
+    <label for="fRating">Your rating *</label>
+    <select id="fRating">
+      <option value="">-- Choose a rating --</option>
+      <option value="5">5 - Excellent</option>
+      <option value="4">4 - Good</option>
+      <option value="3">3 - Average</option>
+      <option value="2">2 - Poor</option>
+      <option value="1">1 - Very poor</option>
+    </select>
+
+    <label for="fComment">Your comments * (at least 10 characters)</label>
+    <textarea id="fComment" rows="5" placeholder="What went well? What should we improve?"></textarea>
+
+    <button type="button" class="btn" onclick="submitFeedback()">Submit feedback</button>
+    <button type="button" class="btn2" onclick="clearForm()">Clear form</button>
+
+    <div id="thanks" class="thanks"></div>
+  </div>
+</div>
+
+<!-- Staff area -->
+<div id="page-admin" class="page">
+
+  <div id="loginBox" class="box loginbox">
+    <h2>Staff login</h2>
+    <label for="uName">Username</label>
+    <input type="text" id="uName" placeholder="Enter username">
+    <label for="uPass">Password</label>
+    <input type="password" id="uPass" placeholder="Enter password">
+    <button type="button" class="btn" onclick="adminLogin()">Log in</button>
+  </div>
+
+  <div id="dashBox">
+    <div class="topline">
+      <h2>Admin dashboard</h2>
+      <button type="button" class="btn2" onclick="adminLogout()">Log out</button>
+    </div>
+
+    <div class="tabs">
+      <button type="button" id="tab-overview" onclick="showTab('overview')">Overview</button>
+      <button type="button" id="tab-manage" onclick="showTab('manage')">Manage Feedback</button>
+      <button type="button" id="tab-report" onclick="showTab('report')">Report</button>
+    </div>
+
+    <div id="tabbox-overview" class="tabbox">
+      <div class="tiles" id="statTiles"></div>
+      <div class="box">
+        <h3>Average rating for each service</h3>
+        <div id="serviceBars"></div>
+      </div>
+      <div class="box">
+        <h3>How many people gave each rating</h3>
+        <div id="starBars"></div>
+      </div>
+      <div class="box">
+        <h3>Recurring problems</h3>
+        <p class="grey">A service is listed here when it has 2 or more low ratings (1 or 2 stars).</p>
+        <div id="problemBox"></div>
+      </div>
+    </div>
+
+    <div id="tabbox-manage" class="tabbox">
+      <div class="box">
+        <h3>Filter feedback</h3>
+        <div class="filters">
+          <div>
+            <label for="fCategory">Service</label>
+            <select id="fCategory" onchange="showTable()"></select>
+          </div>
+          <div>
+            <label for="fStatus">Status</label>
+            <select id="fStatus" onchange="showTable()">
+              <option value="All">All</option>
+              <option value="New">New</option>
+              <option value="In Review">In Review</option>
+              <option value="Responded">Responded</option>
+              <option value="Closed">Closed</option>
+            </select>
+          </div>
+          <div>
+            <label for="fMod">Moderation</label>
+            <select id="fMod" onchange="showTable()">
+              <option value="All">All</option>
+              <option value="Pending">Pending</option>
+              <option value="Approved">Approved</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </div>
+          <div>
+            <label for="fSearch">Search</label>
+            <input type="text" id="fSearch" placeholder="Type a word" oninput="showTable()">
+          </div>
+        </div>
+        <p class="grey" id="tableCount"></p>
+      </div>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Ref</th><th>Visit date</th><th>From</th><th>Service</th><th>Rating</th>
+              <th>Comment and reply</th><th>Moderation</th><th>Status</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="tabbox-report" class="tabbox">
+      <div class="box">
+        <h3>Service quality report</h3>
+        <button type="button" class="btn" onclick="makeReport()">Create report</button>
+        <p class="report" id="reportBox">Click "Create report" to see the report.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">Clinic Feedback and Service Quality Portal | CSE326 Project | Team Ritish</div>
+
+<script>
+const ADMIN_USER = "admin";
+const ADMIN_PASS = "clinic123";
+
+const services = [
+  "Reception & Front Desk",
+  "Doctor Consultation",
+  "Nursing Care",
+  "Waiting Time",
+  "Cleanliness & Hygiene",
+  "Billing & Payments",
+  "Pharmacy",
+  "Laboratory & Tests"
+];
+
+let feedbackList = [];
+let nextId = 1;
+let loggedIn = false;
+
+// ---------- helpers ----------
+
+function todayISO() {
+  let d = new Date();
+  let m = d.getMonth() + 1;
+  let day = d.getDate();
+  if (m < 10) m = "0" + m;
+  if (day < 10) day = "0" + day;
+  return d.getFullYear() + "-" + m + "-" + day;
+}
+
+function stars(n) {
+  let s = "";
+  for (let i = 1; i <= 5; i++) {
+    s += i <= n ? "&#9733;" : "&#9734;";
+  }
+  return s;
+}
+
+// escape user text before putting it in the page
+function safe(text) {
+  return ("" + text)
+    .split("&").join("&amp;")
+    .split("<").join("&lt;")
+    .split(">").join("&gt;")
+    .split("'").join("&#39;")
+    .split('"').join("&quot;");
+}
+
+function findIndexById(id) {
+  for (let i = 0; i < feedbackList.length; i++) {
+    if (feedbackList[i].id === id) return i;
+  }
+  return -1;
+}
+
+function average(list) {
+  if (list.length === 0) return 0;
+  let total = 0;
+  for (let i = 0; i < list.length; i++) total += list[i].rating;
+  return total / list.length;
+}
+
+function barColor(avg) {
+  if (avg < 3) return "bar low";
+  if (avg < 4) return "bar mid";
+  return "bar";
+}
+
+
+// ---------- data ----------
+
+function addFeedback(type, name, email, service, visitDate, rating, comment) {
+  let item = {
+    id: nextId,
+    refNo: "CF-" + (1000 + nextId),
+    type: type,
+    name: name,
+    email: email,
+    service: service,
+    visitDate: visitDate,
+    rating: rating,
+    comment: comment,
+    moderation: "Pending",
+    status: "New",
+    reply: ""
+  };
+
+  if (type === "Anonymous") {
+    item.name = "Anonymous";
+    item.email = "";
+  }
+
+  feedbackList.push(item);
+  nextId++;
+  return item;
+}
+
+function addSampleData() {
+  let a;
+  addFeedback("Identified", "Neha Sharma", "", "Doctor Consultation", "2026-11-02", 5, "The doctor listened carefully and explained my medicines clearly. Very happy.");
+  a = feedbackList[0]; a.moderation = "Approved"; a.status = "Responded"; a.reply = "Thank you Neha! We have shared your kind words with the doctor.";
+
+  addFeedback("Anonymous", "", "", "Waiting Time", "2026-11-03", 2, "I waited almost two hours even with an appointment. This needs to improve.");
+  a = feedbackList[1]; a.moderation = "Approved"; a.status = "In Review";
+
+  addFeedback("Anonymous", "", "", "Waiting Time", "2026-11-05", 1, "Waiting room was crowded and nobody told us about the delay.");
+  a = feedbackList[2]; a.moderation = "Approved";
+
+  addFeedback("Identified", "Rahul Verma", "", "Cleanliness & Hygiene", "2026-11-06", 4, "Clinic is clean and the washrooms are well kept.");
+  a = feedbackList[3]; a.moderation = "Approved"; a.status = "Closed"; a.reply = "Thanks Rahul, our housekeeping team appreciates it.";
+
+  addFeedback("Anonymous", "", "", "Billing & Payments", "2026-11-08", 2, "The bill had a charge I did not understand and the counter staff were not helpful.");
+
+  addFeedback("Identified", "Simran Kaur", "", "Nursing Care", "2026-11-09", 5, "Nurses were gentle and caring with my father.");
+  a = feedbackList[5]; a.moderation = "Approved"; a.status = "Responded"; a.reply = "We are glad your father felt cared for. Thank you Simran!";
+
+  addFeedback("Anonymous", "", "", "Pharmacy", "2026-11-10", 3, "Medicines were available but the queue was slow.");
+
+  addFeedback("Identified", "Amit Joshi", "", "Laboratory & Tests", "2026-11-11", 4, "Reports were ready on time and the staff were polite.");
+  a = feedbackList[7]; a.moderation = "Approved"; a.status = "Closed";
+
+  addFeedback("Anonymous", "", "", "Billing & Payments", "2026-11-12", 1, "Billing took very long and the final amount kept changing.");
+}
+
+
+// ---------- navigation ----------
+
+function showPage(name) {
+  document.getElementById("page-home").style.display = "none";
+  document.getElementById("page-feedback").style.display = "none";
+  document.getElementById("page-admin").style.display = "none";
+  document.getElementById("page-" + name).style.display = "block";
+
+  if (name === "admin") {
+    document.getElementById("loginBox").style.display = loggedIn ? "none" : "block";
+    document.getElementById("dashBox").style.display = loggedIn ? "block" : "none";
+    if (loggedIn) showTab("overview");
+  }
+  showHome();
+}
+
+function showTab(name) {
+  let names = ["overview", "manage", "report"];
+  for (let i = 0; i < names.length; i++) {
+    document.getElementById("tabbox-" + names[i]).style.display = "none";
+    document.getElementById("tab-" + names[i]).className = "";
+  }
+  document.getElementById("tabbox-" + name).style.display = "block";
+  document.getElementById("tab-" + name).className = "active";
+
+  if (name === "overview") showOverview();
+  if (name === "manage") showTable();
+}
+
+
+// ---------- feedback form ----------
+
+function fillServiceLists() {
+  let options = "";
+  for (let i = 0; i < services.length; i++) {
+    options += "<option value='" + services[i] + "'>" + services[i] + "</option>";
+  }
+  document.getElementById("fService").innerHTML = "<option value=''>-- Choose a service --</option>" + options;
+  document.getElementById("fCategory").innerHTML = "<option value='All'>All</option>" + options;
+}
+
+function toggleIdentity() {
+  let type = document.getElementById("fType").value;
+  document.getElementById("identityBox").style.display = type === "Anonymous" ? "none" : "block";
+}
+
+function clearForm() {
+  document.getElementById("fType").value = "Anonymous";
+  document.getElementById("fName").value = "";
+  document.getElementById("fEmail").value = "";
+  document.getElementById("fService").value = "";
+  document.getElementById("fVisit").value = todayISO();
+  document.getElementById("fRating").value = "";
+  document.getElementById("fComment").value = "";
+  toggleIdentity();
+}
+
+function submitFeedback() {
+  let type = document.getElementById("fType").value;
+  let name = document.getElementById("fName").value.trim();
+  let email = document.getElementById("fEmail").value.trim();
+  let service = document.getElementById("fService").value;
+  let visit = document.getElementById("fVisit").value;
+  let rating = document.getElementById("fRating").value;
+  let comment = document.getElementById("fComment").value.trim();
+
+  if (type === "Identified" && name === "") {
+    alert("Please enter your name, or choose Anonymous.");
+    return;
+  }
+  if (email !== "" && !email.includes("@")) {
+    alert("Please enter a valid email address.");
+    return;
+  }
+  if (service === "") {
+    alert("Please choose the service you used.");
+    return;
+  }
+  if (visit === "") {
+    alert("Please choose the date of your visit.");
+    return;
+  }
+  if (visit > todayISO()) {
+    alert("The visit date cannot be in the future.");
+    return;
+  }
+  if (rating === "") {
+    alert("Please choose a rating.");
+    return;
+  }
+  if (comment.length < 10) {
+    alert("Please write at least 10 characters in your comments.");
+    return;
+  }
+
+  if (!confirm("Submit this feedback?")) return;
+
+  let item = addFeedback(type, name, email, service, visit, parseInt(rating), comment);
+
+  clearForm();
+  let box = document.getElementById("thanks");
+  box.style.display = "block";
+  box.innerHTML = "<h3>Thank you for your feedback!</h3><p>Your reference number is <b>" + item.refNo + "</b>.</p>";
+  showHome();
+}
+
+
+// ---------- home page ----------
+
+function showHome() {
+  let replied = 0;
+  for (let i = 0; i < feedbackList.length; i++) {
+    if (feedbackList[i].reply !== "") replied++;
+  }
+  document.getElementById("pubTotal").innerHTML = feedbackList.length;
+  document.getElementById("pubAvg").innerHTML = average(feedbackList).toFixed(1);
+  document.getElementById("pubReplied").innerHTML = replied;
+
+  // latest 6 approved comments
+  let html = "";
+  let shown = 0;
+  for (let i = feedbackList.length - 1; i >= 0; i--) {
+    let f = feedbackList[i];
+    if (f.moderation !== "Approved") continue;
+    if (shown === 6) break;
+
+    html += "<div class='card'>";
+    html += "<div class='stars'>" + stars(f.rating) + "</div>";
+    html += "<p><b>" + safe(f.name) + "</b><br>";
+    html += "<span class='grey'>" + safe(f.service) + " | " + f.visitDate + "</span></p>";
+    html += "<p>" + safe(f.comment) + "</p>";
+    if (f.reply !== "") {
+      html += "<div class='reply'><b>Clinic reply:</b> " + safe(f.reply) + "</div>";
+    }
+    html += "</div>";
+    shown++;
+  }
+  if (shown === 0) {
+    html = "<p class='grey'>No approved comments yet.</p>";
+  }
+  document.getElementById("publicWall").innerHTML = html;
+}
+
+
+// ---------- login ----------
+
+function adminLogin() {
+  let user = document.getElementById("uName").value.trim();
+  let pass = document.getElementById("uPass").value;
+
+  if (user === "" || pass === "") {
+    alert("Please enter both username and password.");
+    return;
+  }
+
+  if (user === ADMIN_USER && pass === ADMIN_PASS) {
+    loggedIn = true;
+    document.getElementById("uName").value = "";
+    document.getElementById("uPass").value = "";
+    showPage("admin");
+  } else {
+    alert("Wrong username or password.");
+  }
+}
+
+function adminLogout() {
+  if (confirm("Do you want to log out?")) {
+    loggedIn = false;
+    showPage("admin");
+  }
+}
+
+
+// ---------- dashboard overview ----------
+
+function showOverview() {
+  let total = feedbackList.length;
+  let pending = 0, needReply = 0, done = 0;
+
+  for (let i = 0; i < total; i++) {
+    let f = feedbackList[i];
+    if (f.moderation === "Pending") pending++;
+    if (f.status === "New" || f.status === "In Review") needReply++;
+    if (f.status === "Responded" || f.status === "Closed") done++;
+  }
+  let rate = total > 0 ? (done / total) * 100 : 0;
+
+  let tiles = "";
+  tiles += "<div class='tile'><h2>" + total + "</h2><p>Total feedback</p></div>";
+  tiles += "<div class='tile'><h2>" + average(feedbackList).toFixed(1) + "</h2><p>Average rating</p></div>";
+  tiles += "<div class='tile'><h2>" + pending + "</h2><p>Waiting for moderation</p></div>";
+  tiles += "<div class='tile'><h2>" + needReply + "</h2><p>Needs a response</p></div>";
+  tiles += "<div class='tile'><h2>" + rate.toFixed(0) + "%</h2><p>Response rate</p></div>";
+  document.getElementById("statTiles").innerHTML = tiles;
+
+  let bars = "";
+  let problems = "";
+
+  for (let i = 0; i < services.length; i++) {
+    let count = 0, sum = 0, lowCount = 0;
+
+    for (let j = 0; j < feedbackList.length; j++) {
+      if (feedbackList[j].service === services[i]) {
+        count++;
+        sum += feedbackList[j].rating;
+        if (feedbackList[j].rating <= 2) lowCount++;
+      }
+    }
+
+    let avg = count > 0 ? sum / count : 0;
+    let width = (avg / 5) * 100;
+
+    bars += "<div class='barline'>" + services[i] + " : ";
+    bars += count === 0 ? "no data" : avg.toFixed(1) + " (" + count + " feedback)";
+    bars += "<div class='bartrack'><div class='" + barColor(avg) + "' style='width:" + width + "%'></div></div></div>";
+
+    if (lowCount >= 2) {
+      problems += "<div class='problem'><b>" + services[i] + "</b>: " + lowCount + " low ratings. This keeps coming up, so it should be fixed first.</div>";
+    }
+  }
+  document.getElementById("serviceBars").innerHTML = bars;
+
+  if (problems === "") {
+    problems = "<div class='good'>No recurring problems found.</div>";
+  }
+  document.getElementById("problemBox").innerHTML = problems;
+
+  let starHtml = "";
+  for (let r = 5; r >= 1; r--) {
+    let count = 0;
+    for (let k = 0; k < feedbackList.length; k++) {
+      if (feedbackList[k].rating === r) count++;
+    }
+    let width = total > 0 ? (count / total) * 100 : 0;
+
+    starHtml += "<div class='barline'>" + r + " star : " + count;
+    starHtml += "<div class='bartrack'><div class='" + barColor(r) + "' style='width:" + width + "%'></div></div></div>";
+  }
+  document.getElementById("starBars").innerHTML = starHtml;
+}
+
+
+// ---------- manage feedback table ----------
+
+function statusDropdown(f) {
+  let list = ["New", "In Review", "Responded", "Closed"];
+  let html = "<select onchange='changeStatus(" + f.id + ", this.value)'>";
+  for (let i = 0; i < list.length; i++) {
+    html += "<option value='" + list[i] + "'" + (f.status === list[i] ? " selected" : "") + ">" + list[i] + "</option>";
+  }
+  return html + "</select>";
+}
+
+function showTable() {
+  let wantService = document.getElementById("fCategory").value;
+  let wantStatus = document.getElementById("fStatus").value;
+  let wantMod = document.getElementById("fMod").value;
+  let word = document.getElementById("fSearch").value.trim().toLowerCase();
+
+  let html = "";
+  let count = 0;
+
+  for (let i = feedbackList.length - 1; i >= 0; i--) {
+    let f = feedbackList[i];
+
+    if (wantService !== "All" && f.service !== wantService) continue;
+    if (wantStatus !== "All" && f.status !== wantStatus) continue;
+    if (wantMod !== "All" && f.moderation !== wantMod) continue;
+    if (word !== "") {
+      let text = (f.comment + " " + f.name + " " + f.service).toLowerCase();
+      if (!text.includes(word)) continue;
+    }
+
+    count++;
+
+    html += "<tr>";
+    html += "<td>" + f.refNo + "</td>";
+    html += "<td>" + f.visitDate + "</td>";
+    html += "<td>" + safe(f.name) + "</td>";
+    html += "<td>" + safe(f.service) + "</td>";
+    html += "<td class='stars'>" + stars(f.rating) + "</td>";
+
+    html += "<td>" + safe(f.comment);
+    if (f.reply !== "") {
+      html += "<div class='reply'><b>Reply:</b> " + safe(f.reply) + "</div>";
+    }
+    html += "</td>";
+
+    html += "<td><span class='label " + f.moderation + "'>" + f.moderation + "</span></td>";
+    html += "<td>" + statusDropdown(f) + "</td>";
+
+    html += "<td>";
+    html += "<button type='button' class='small green' onclick='moderate(" + f.id + ", \"Approved\")'>Approve</button>";
+    html += "<button type='button' class='small orange' onclick='moderate(" + f.id + ", \"Rejected\")'>Reject</button>";
+    html += "<button type='button' class='small teal' onclick='replyTo(" + f.id + ")'>Reply</button>";
+    html += "<button type='button' class='small red' onclick='removeFeedback(" + f.id + ")'>Delete</button>";
+    html += "</td></tr>";
+  }
+
+  if (count === 0) {
+    html = "<tr><td colspan='9'>No feedback matches your filters.</td></tr>";
+  }
+  document.getElementById("tableBody").innerHTML = html;
+  document.getElementById("tableCount").innerHTML = "Showing " + count + " of " + feedbackList.length + " feedback.";
+}
+
+function moderate(id, value) {
+  let index = findIndexById(id);
+  feedbackList[index].moderation = value;
+  showTable();
+  showHome();
+}
+
+function changeStatus(id, value) {
+  let index = findIndexById(id);
+  feedbackList[index].status = value;
+  showTable();
+}
+
+function replyTo(id) {
+  let f = feedbackList[findIndexById(id)];
+  let text = prompt("Write your reply to " + f.refNo + ":", f.reply);
+
+  if (text === null) return;
+  text = text.trim();
+  if (text === "") {
+    alert("The reply cannot be empty.");
+    return;
+  }
+  f.reply = text;
+  f.status = "Responded";
+  showTable();
+  showHome();
+}
+
+function removeFeedback(id) {
+  let index = findIndexById(id);
+  if (confirm("Delete " + feedbackList[index].refNo + " permanently?")) {
+    feedbackList.splice(index, 1);
+      showTable();
+    showHome();
+  }
+}
+
+
+// ---------- report ----------
+
+function makeReport() {
+  let total = feedbackList.length;
+  if (total === 0) {
+    document.getElementById("reportBox").innerHTML = "No feedback yet.";
+    return;
+  }
+
+  let report = "SERVICE QUALITY REPORT\n";
+  report += "Date: " + new Date().toDateString() + "\n\n";
+  report += "Total feedback: " + total + "\n";
+  report += "Average rating: " + average(feedbackList).toFixed(2) + " out of 5\n\n";
+  report += "RATING FOR EACH SERVICE\n";
+
+  let bestName = "", bestAvg = 0;
+  let worstName = "", worstAvg = 6;
+
+  for (let i = 0; i < services.length; i++) {
+    let count = 0, sum = 0;
+    for (let j = 0; j < total; j++) {
+      if (feedbackList[j].service === services[i]) {
+        count++;
+        sum += feedbackList[j].rating;
+      }
+    }
+    if (count === 0) continue;
+
+    let avg = sum / count;
+    report += "- " + services[i] + ": " + avg.toFixed(2) + " (" + count + " feedback)\n";
+
+    if (avg > bestAvg) { bestAvg = avg; bestName = services[i]; }
+    if (avg < worstAvg) { worstAvg = avg; worstName = services[i]; }
+  }
+
+  report += "\nBest service: " + bestName + " (" + bestAvg.toFixed(2) + ")\n";
+  report += "Needs most attention: " + worstName + " (" + worstAvg.toFixed(2) + ")\n";
+
+  document.getElementById("reportBox").innerHTML = safe(report);
+}
+
+
+// start
+fillServiceLists();
+addSampleData();
+clearForm();
+showPage("home");
+</script>
+</body>
+</html>
